@@ -1,9 +1,5 @@
 pipeline {
-    agent { 
-        docker { 
-            image 'jenkins-micromamba-agent:latest'
-        }
-    }
+    agent any
     
     stages {
         stage('Build') {
