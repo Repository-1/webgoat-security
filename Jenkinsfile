@@ -22,13 +22,9 @@ pipeline {
             steps {
                 sh 'semgrep --config=auto --json --output=semgrep.json . || true'
                 sh 'bandit -r . -f json -o bandit.json || true'
+                // Archive artifacts in the same stage
+                archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
             }
-        }
-    }
-    
-    post {
-        always {
-            archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
         }
     }
 }
