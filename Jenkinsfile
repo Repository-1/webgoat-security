@@ -31,9 +31,23 @@ pipeline {
                     which bandit
                     semgrep --config=auto --json --output=semgrep.json . || true
                     bandit -r . -f json -o bandit.json || true
+                    python3 generate-html-report.py semgrep.json
                 '''
-                archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
+                archiveArtifacts artifacts: '*.json, security-report.html', allowEmptyArchive: true
             }
+        }
+    }
+    
+    post {
+        always {
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.',
+                reportFiles: 'security-report.html',
+                reportName: 'Security Report'
+            ])
         }
     }
 }
