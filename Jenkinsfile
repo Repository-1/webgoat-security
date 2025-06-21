@@ -1,12 +1,10 @@
 pipeline {
-    agent{
-        docker {
-            image 'jenkins-micromamba-agent:latest'
-        }
+    agent 
+    {
+    docker {
+        image 'jenkins-micromamba-agent:latest'
     }
-    tools {
-        maven 'Maven-3.9'
-    }
+}
     stages {
         stage('Build') {
             steps {
