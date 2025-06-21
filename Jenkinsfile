@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent{
+        docker {
+            image 'jenkins-micromamba-agent:latest'
+        }
+    }
     tools {
         maven 'Maven-3.9'
     }
