@@ -6,6 +6,12 @@ pipeline {
     }
 }
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm  // Explicit checkout of your repository
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean compile -DskipTests'
