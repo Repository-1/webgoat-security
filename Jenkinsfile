@@ -9,15 +9,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Explicit checkout of your repository
+                checkout scm
             }
         }
         
         stage('Build') {
             steps {
                 sh '''
-                    eval "$(micromamba shell hook --shell bash)"
-                    micromamba activate security-tools
+                    export PATH="/opt/conda/envs/security-tools/bin:$PATH"
+                    which mvn
                     mvn clean compile -DskipTests
                 '''
             }
@@ -26,13 +26,14 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                    eval "$(micromamba shell hook --shell bash)"
-                    micromamba activate security-tools
+                    export PATH="/opt/conda/envs/security-tools/bin:$PATH"
+                    which semgrep
+                    which bandit
                     semgrep --config=auto --json --output=semgrep.json . || true
                     bandit -r . -f json -o bandit.json || true
                 '''
                 archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
             }
         }
-    }  // ← Only ONE closing brace for stages block
+    }
 }
